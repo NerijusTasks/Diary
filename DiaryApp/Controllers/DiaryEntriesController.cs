@@ -28,9 +28,17 @@ namespace DiaryApp.Controllers
         [HttpPost]
         public IActionResult Create(DiaryEntry obj)
         {
-            _db.DiaryEntries.Add(obj); // Add the new diary entry to the database
-            _db.SaveChanges(); //save changes to the database
-            return RedirectToAction("Index");
+            if (obj != null && obj.Title.Length <3)
+            {
+                ModelState.AddModelError("Title", "Title too short");
+            }
+            if (ModelState.IsValid)
+            {
+                _db.DiaryEntries.Add(obj); // Add the new diary entry to the database
+                _db.SaveChanges(); //save changes to the database
+                return RedirectToAction("Index");
+            }
+           return View(obj);
         }
     }
 }
