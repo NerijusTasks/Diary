@@ -20,7 +20,7 @@ namespace DiaryApp.Controllers
             return View(objDiaryEntryList);
         }
 
-        
+
         public IActionResult Create()
         {
             return View();
@@ -28,7 +28,7 @@ namespace DiaryApp.Controllers
         [HttpPost]
         public IActionResult Create(DiaryEntry obj)
         {
-            if (obj != null && obj.Title.Length <3)
+            if (obj != null && obj.Title.Length < 3)
             {
                 ModelState.AddModelError("Title", "Title too short");
             }
@@ -38,13 +38,13 @@ namespace DiaryApp.Controllers
                 _db.SaveChanges(); //save changes to the database
                 return RedirectToAction("Index");
             }
-           return View(obj);
+            return View(obj);
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id) 
+        public IActionResult Edit(int? id)
         {
-            if(id == null || id == 0)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
@@ -58,6 +58,7 @@ namespace DiaryApp.Controllers
             return View(diaryEntry);
         }
 
+        [HttpPost]
         public IActionResult Edit(DiaryEntry obj)
         {
             if (obj != null && obj.Title.Length < 3)
@@ -71,6 +72,30 @@ namespace DiaryApp.Controllers
                 return RedirectToAction("Index");
             }
             return View(obj);
+        }
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            DiaryEntry diaryEntry = _db.DiaryEntries.Find(id);
+
+            if (diaryEntry == null)
+            {
+                return NotFound();
+            }
+            return View(diaryEntry);
+        }
+        [HttpPost]
+        public IActionResult Delete(DiaryEntry obj)
+        {
+            _db.DiaryEntries.Remove(obj); // Remove the new diary entry to the database
+            _db.SaveChanges(); //save changes to the database
+            return RedirectToAction("Index");
+
         }
     }
 }
